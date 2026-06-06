@@ -1,18 +1,18 @@
-﻿(() => {
+(() => {
   "use strict";
 
   // =========================================================
-  // 鍩烘湰閰嶇疆
+  // 基本配置
   // =========================================================
   const SAME_KEY = "j";
   const CHANGE_KEY = "f";
   const NEXT_KEY = " ";
   const FIX_DUR = 1000;
   const MEM_DUR = 500;
-  const PRACTICE_TRIALS = 15; // 姣忎釜缁冧範block鐨勮瘯娆?
+  const PRACTICE_TRIALS = 15; // 每个练习block的试次
   const PRACTICE_ACC_CRITERION = 0.80;
 
-  const TRIALS_PER_FORMAL_BLOCK = 30;   // 姣忎釜灏?block 鐨勮瘯娆?
+  const TRIALS_PER_FORMAL_BLOCK = 30;   // 每个小 block 的试次
   const VALID_RATIO_FORMAL = 0.60;
   const VALID_RATIO_PRACTICE = 0.60;
   const CHANGE_RATIO = 0.50;
@@ -20,22 +20,22 @@
   const INTERVAL_MIN = 100;
   const INTERVAL_MAX = 1500;
 
-  // fromOthers姝ｅ紡 block 鍓嶇殑杩炴帴椤?
+  // fromOthers正式 block 前的连接页
   const CONNECT_MIN = 3000;
   const CONNECT_MAX = 8000;
 
-  // 缁冧範闃舵涓嶆搷绾?SOA锛屽浐瀹?550ms
+  // 练习阶段不操纵 SOA，固定 550ms
   const PRACTICE_SOA = 550;
   const FORMAL_SOA_LEVELS = [200, 550, 1000];
 
-  // 灞忓箷浣嶇疆
+  // 屏幕位置
   const POS_L_X = 0.35;
   const POS_R_X = 0.65;
   const POS_Y = 0.50;
   const STIM_SIZE_RATIO = 0.13;
 
   // =========================================================
-  // 璺緞涓庣礌鏉?
+  // 路径与素材
   // =========================================================
   const PATHS = {
     instruction: "InstructionImages",
@@ -88,7 +88,7 @@
   ];
 
   // =========================================================
-  // 鑳屾櫙鐏拌壊
+  // 背景灰色
   // =========================================================
   document.body.style.background = "rgb(128,128,128)";
   document.documentElement.style.background = "rgb(128,128,128)";
@@ -98,7 +98,7 @@
   document.documentElement.style.overflow = "hidden";
 
   // =========================================================
-  // 鍒濆鍖?
+  // 初始化
   // =========================================================
   const jsPsych = initJsPsych({
     display_element: "jspsych-target",
@@ -121,7 +121,7 @@
   };
 
   // =========================================================
-  // 宸ュ叿鍑芥暟
+  // 工具函数
   // =========================================================
   function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -252,7 +252,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
         background:rgb(128,128,128);
         color:#000000;
         font-size:35px;">
-        <span>瀵规柟姝ｅ湪杈撳叆</span><span id="typing-dots">.</span>
+        <span>对方正在输入</span><span id="typing-dots">.</span>
       </div>
     `;
   }
@@ -268,7 +268,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
         background:rgb(128,128,128);
         color:#000000;
         font-size:35px;">
-        <span>姝ｅ湪涓庡鏂硅繛鎺?/span><span id="connecting-dots">.</span>
+        <span>正在与对方连接</span><span id="connecting-dots">.</span>
       </div>
     `;
   }
@@ -310,8 +310,8 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
     return {
       type: jsPsychFullscreen,
       fullscreen_mode: true,
-      message: '<p style="color:#fff; font-size:22px;">瀹為獙灏嗚繘鍏ュ叏灞忔ā寮忋€傛寜涓嬫寜閽紑濮嬨€?/p>',
-      button_label: "杩涘叆鍏ㄥ睆"
+      message: '<p style="color:#fff; font-size:22px;">实验将进入全屏模式。按下按钮开始。</p>',
+      button_label: "进入全屏"
     };
   }
 
@@ -320,45 +320,45 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
       type: jsPsychSurveyHtmlForm,
       preamble: `
         <div style="width:min(880px,92vw); margin:0 auto; color:#fff;">
-          <h2 style="text-align:center;">琚瘯淇℃伅</h2>
-          <p style="text-align:center;">璇峰～鍐欎互涓嬩俊鎭紝鐒跺悗鐐瑰嚮鈥滃紑濮嬪疄楠屸€濄€?/p>
+          <h2 style="text-align:center;">被试信息</h2>
+          <p style="text-align:center;">请填写以下信息，然后点击“开始实验”。</p>
         </div>
       `,
       html: `
         <div style="width:min(880px,92vw); margin:0 auto; color:#fff; font-size:18px;">
           <div style="margin-bottom:16px;">
-            <label>濮撳悕 / 缂栧彿</label>
+            <label>姓名 / 编号</label>
             <input name="name" type="text" required
               style="width:100%; font-size:18px; padding:10px; box-sizing:border-box;">
           </div>
           <div style="margin-bottom:16px;">
-            <label>鍑虹敓鏃ユ湡</label>
+            <label>出生日期</label>
             <input name="birthdate" type="date" required
               style="width:100%; font-size:18px; padding:10px; box-sizing:border-box;">
           </div>
           <div style="margin-bottom:16px;">
-            <label>鎬у埆</label>
+            <label>性别</label>
             <select name="gender" required
               style="width:100%; font-size:18px; padding:10px; box-sizing:border-box;">
-              <option value="">璇烽€夋嫨</option>
-              <option value="Male">鐢?/option>
-              <option value="Female">濂?/option>
-              <option value="Other">鍏朵粬</option>
+              <option value="">请选择</option>
+              <option value="Male">男</option>
+              <option value="Female">女</option>
+              <option value="Other">其他</option>
             </select>
           </div>
           <div style="margin-bottom:16px;">
-            <label>鍒╂墜</label>
+            <label>利手</label>
             <select name="handedness" required
               style="width:100%; font-size:18px; padding:10px; box-sizing:border-box;">
-              <option value="">璇烽€夋嫨</option>
-              <option value="Right">鍙冲埄鎵?/option>
-              <option value="Left">宸﹀埄鎵?/option>
-              <option value="Both">鍙屾墜</option>
+              <option value="">请选择</option>
+              <option value="Right">右利手</option>
+              <option value="Left">左利手</option>
+              <option value="Both">双手</option>
             </select>
           </div>
         </div>
       `,
-      button_label: "寮€濮嬪疄楠?,
+      button_label: "开始实验",
       on_finish: (data) => {
         const r = data.response || {};
         STATE.subject.name = String(r.name || "").trim();
@@ -456,7 +456,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // 璇曟鐢熸垚
+  // 试次生成
   // =========================================================
   function buildTrials({
     conditionCode,
@@ -535,7 +535,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // 鍗曡瘯娆?timeline
+  // 单试次 timeline
   // =========================================================
   function makeSingleTrialTimeline(trialVars) {
     const conditionConfig = getConditionConfig(trialVars.conditionCode);
@@ -665,7 +665,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // 缁冧範鍙嶉锛堝彧鍦ㄧ粌涔犻樁娈靛嚭鐜帮級
+  // 练习反馈（只在练习阶段出现）
   // =========================================================
   function makePracticeFeedbackTrial() {
     return {
@@ -690,7 +690,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
             color:#000000;
             font-size:35px;
           ">
-            ${isCorrect ? "鎭枩浣犵瓟瀵逛簡锛? : "寰堥仐鎲撅紝浣犵瓟閿欎簡锛?}
+            ${isCorrect ? "恭喜你答对了！" : "很遗憾，你答错了！"}
           </div>
         `;
       },
@@ -703,7 +703,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // 缁冧範
+  // 练习
   // =========================================================
   function practiceLoopNode(cond) {
     const cfg = getConditionConfig(cond);
@@ -775,7 +775,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // 姝ｅ紡 block锛堜笉鍔犵粌涔犲弽棣堬級
+  // 正式 block（不加练习反馈）
   // =========================================================
   function formalBlockNode(cond, blockIndexWithinCondition, isLastOverall) {
     const cfg = getConditionConfig(cond);
@@ -811,7 +811,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // CSV 涓嬭浇
+  // CSV 下载
   // =========================================================
   function csvEscape(v) {
     if (v === null || v === undefined) return "";
@@ -882,7 +882,7 @@ function makeImageStage(leftSrc = null, rightSrc = null, showFixation = true) {
   }
 
   // =========================================================
-  // timeline 缁勮
+  // timeline 组装
   // =========================================================
   STATE.assignedOrder = "A_ONLY";
 
